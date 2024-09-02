@@ -1,0 +1,22 @@
+(imports and others)
+    }
+
+    @Override
+    public void run() {
+        String queueMessage = plugin.getConfigManager().getQueueMessage();
+
+        if (!plugin.getConfigManager().isQueueMessageEnabled()) {
+            return;
+        }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            
+            player.sendMessage(queueMessage.replace("<position>", getPositionInQueue(player)));
+        }
+    }
+
+    private String getPositionInQueue(Player player) {
+
+        return "1";
+    }
+}
