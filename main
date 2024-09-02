@@ -1,0 +1,68 @@
+    private ConfigManager configManager;
+    private ChunkRenderQueueTask chunkRenderQueueTask;
+
+    @Override
+    public void onEnable() {
+
+        saveDefaultConfig();
+        configManager = new ConfigManager(this);
+
+
+        Bukkit.getPluginManager().registerEvents(new PlayerActionListener(this), this);
+
+
+        chunkRenderQueueTask = new ChunkRenderQueueTask(this);
+        chunkRenderQueueTask.runTaskTimer(this, 0L, 200L); // 10 sekund zamiast 5
+
+
+        if (getConfig().getBoolean("clean-ram.enabled")) {
+            Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
+                @Override
+                public void run() {
+                    System.gc();
+                }
+            }, 0L, 1200L);
+        }
+
+
+        disableUnnecessaryProcesses();
+    }
+
+    @Override
+    public void onDisable() {
+        Bukkit.getScheduler().cancelTasks(this);
+    }
+
+    private void disableUnnecessaryProcesses() {
+        if (getConfig().getBoolean("disable-chunk-ticking")) {
+
+        }
+
+        if (getConfig().getBoolean("disable-block-physics")) {
+            
+        }
+
+
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("sufficientcomponents")) {
+            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+                reloadConfig();
+                configManager = new ConfigManager(this);
+                chunkRenderQueueTask.cancel();
+                chunkRenderQueueTask = new ChunkRenderQueueTask(this);
+                chunkRenderQueueTask.runTaskTimer(this, 0L, 200L);
+                disableUnnecessaryProcesses();
+                sender.sendMessage("[SC] Configuration reloaded.");
+                return true;
+            }
+        }
+        return false;
+    }
+}
