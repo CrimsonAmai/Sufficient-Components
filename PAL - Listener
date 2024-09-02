@@ -1,0 +1,36 @@
+(imports Right here)
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Chunk chunk = event.getPlayer().getLocation().getChunk();
+        enableChunkTicking(chunk);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Chunk chunk = event.getPlayer().getLocation().getChunk();
+            if (chunk.getWorld().getPlayers().isEmpty()) {
+                disableChunkTicking(chunk);
+            }
+        }, 20L); 
+    }
+
+    @EventHandler
+    public void onBlockPhysics(BlockPhysicsEvent event) {
+        if (plugin.getConfig().getBoolean("disable-block-physics")) {
+            Block block = event.getBlock();
+            if (block.getType() == Material.FIRE) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    private void enableChunkTicking(Chunk chunk) {
+        
+    }
+
+    private void disableChunkTicking(Chunk chunk) {
+        
+    }
+}
