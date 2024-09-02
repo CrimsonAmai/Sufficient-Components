@@ -1,0 +1,19 @@
+(imports and other Right Here)
+
+    public String getQueueMessage() {
+
+        String message = plugin.getConfig().getString("messages.queue", "you are <position> for chunk rendering.");
+
+
+        if (!message.startsWith("[SC]")) {
+            message = "[SC] " + message;
+        }
+
+        return message;
+    }
+
+    public boolean isQueueMessageEnabled() {
+        
+        return plugin.getConfig().getBoolean("messages.enabled", true);
+    }
+}
